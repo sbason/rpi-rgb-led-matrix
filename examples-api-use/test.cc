@@ -136,7 +136,7 @@ static void WriteText(RGBMatrix * canvas) {
     //temperatures
     DrawText(offscreen, bigFont, 0, 32,
                          coldBlue, NULL, lowTemp.c_str(), 0);
-    DrawText(offscreen, bigFont, 14, 32,
+    DrawText(offscreen, bigFont, 15, 32,
                          red, NULL, highTemp.c_str(), 0);
     // DrawText(offscreen, bigFont, 0, 31,
     //                      white, NULL, "1234567890", -1);
