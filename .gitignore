@@ -8,3 +8,4 @@ minimal-example
 text-example
 *.dll
 *.exe
+*.AppleDouble*
