@@ -44,8 +44,9 @@ static void WriteText(RGBMatrix * canvas) {
   Font timesFont;
   timesFont.LoadFont(bdf_times_font_file);
   struct timespec next_time;
-  next_time.tv_nsec = 0;
+  struct tm tm;
   next_time.tv_sec = time(NULL);
+  next_time.tv_nsec = 0;
 
   while (!interrupt_received) {
     try{
@@ -83,16 +84,14 @@ static void WriteText(RGBMatrix * canvas) {
       offscreen->Fill(0, 0, 0);
 
       Color red(255, 0, 0);
-      Color yellow(255, 255, 0);
+      Color yellow(252, 192, 50);
       Color green(0, 255, 0);
       Color white(255, 255, 255);
       Color coldBlue(0, 228, 255);
-      char time_buffer[256];
-      char printTimeBuffer[256];
-      struct tm tm;
+
       localtime_r(&next_time.tv_sec, &tm);
+      char time_buffer[256];
       strftime(time_buffer, sizeof(time_buffer), "%H:%M", &tm);
-      strftime(printTimeBuffer, sizeof(time_buffer), "%H:%M:%S", &tm);
       //1st destination
       DrawText(offscreen, timesFont, 45, 5,
         color1, NULL, time1.c_str(), 0);
@@ -127,7 +126,7 @@ static void WriteText(RGBMatrix * canvas) {
     } catch(const std::exception& e) {
       printf("An error occured");
     }
-    next_time.tv_sec += 1;
+    next_time.tv_sec = time(NULL) + 1;
   }
 }
 
@@ -135,7 +134,7 @@ int main(int argc, char *argv[]) {
   RGBMatrix::Options defaults;
   defaults.hardware_mapping = "regular";  // or e.g. "adafruit-hat"
   defaults.rows = 32;
-  defaults.chain_length = 1;
+  defaults.chain_length = 2;
   defaults.parallel = 1;
   defaults.show_refresh_rate = true;
 
