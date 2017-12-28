@@ -73,6 +73,31 @@ static void MakeCloudySymbol(FrameCanvas *offscreen) {
   //line 8
   DrawWeatherLine(offscreen, 5, 8, 9, 8, lightGrey);
 }
+static void MakeSunnySymbol(FrameCanvas *offscreen) {
+  Color orange(240, 198, 0);
+
+  //line 1
+  DrawWeatherLine(offscreen, 5, 1, 5, 1, orange);
+  DrawWeatherLine(offscreen, 8, 1, 8, 1, orange);
+  //line 2 blank
+  //line 3
+  DrawWeatherLine(offscreen, 3, 3, 3, 3, orange);
+  DrawWeatherLine(offscreen, 5, 3, 8, 3, orange);
+  DrawWeatherLine(offscreen, 10, 3, 10, 3, orange);
+  //line 4
+  DrawWeatherLine(offscreen, 5, 4, 8, 4, orange);
+
+  //line 5
+  DrawWeatherLine(offscreen, 5, 5, 8, 5, orange);
+  //line 6
+  DrawWeatherLine(offscreen, 3, 6, 3, 6, orange);
+  DrawWeatherLine(offscreen, 5, 6, 8, 6, orange);
+  DrawWeatherLine(offscreen, 10, 6, 10, 6, orange);
+  //line 7 blank
+  //line 8
+  DrawWeatherLine(offscreen, 5, 8, 5, 8, orange);
+  DrawWeatherLine(offscreen, 8, 8, 8, 8, orange);
+}
 
 static void WriteText(RGBMatrix * canvas) {
   FrameCanvas *offscreen = canvas->CreateFrameCanvas();
@@ -160,7 +185,7 @@ static void WriteText(RGBMatrix * canvas) {
         red, NULL, highTemp.c_str(), 0);
 
       //weather
-      MakeCloudySymbol(offscreen);
+      MakeSunnySymbol(offscreen);
 
       clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &next_time, NULL);
 
