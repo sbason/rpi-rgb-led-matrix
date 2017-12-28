@@ -186,6 +186,88 @@ static void MakeLightSnowSymbol(FrameCanvas *offscreen) {
   DrawWeatherLine(offscreen, 9, 8, 9, 8, white);
 }
 
+static void MakeHeavySnowSymbol(FrameCanvas *offscreen) {
+  Color darkGrey(182, 182, 178);
+  Color white(255, 255, 255);
+  //line 1
+  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey);
+  //line 2 blank
+  DrawWeatherLine(offscreen, 4, 2, 11, 2, darkGrey);
+  //line 3
+  DrawWeatherLine(offscreen, 3, 3, 12, 3, darkGrey);
+  //line 4
+  DrawWeatherLine(offscreen, 2, 4, 12, 4, darkGrey);
+  //line 5
+  DrawWeatherLine(offscreen, 3, 5, 11, 5, darkGrey);
+  //line 6
+  DrawWeatherLine(offscreen, 4, 6, 4, 6, white);
+  DrawWeatherLine(offscreen, 7, 6, 7, 6, white);
+  DrawWeatherLine(offscreen, 10, 6, 10, 6, white);
+  //line 7
+  DrawWeatherLine(offscreen, 5, 7, 5, 7, white);
+  DrawWeatherLine(offscreen, 8, 7, 8, 7, white);
+  DrawWeatherLine(offscreen, 11, 7, 11, 7, white);
+  //line 8
+  DrawWeatherLine(offscreen, 6, 8, 6, 8, white);
+  DrawWeatherLine(offscreen, 9, 8, 9, 8, white);
+  DrawWeatherLine(offscreen, 12, 8, 12, 8, white);
+}
+
+static void MakeHeavyRainSymbol(FrameCanvas *offscreen) {
+  Color darkGrey(182, 182, 178);
+  Color blue(98, 184, 244);
+  //line 1
+  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey);
+  //line 2 blank
+  DrawWeatherLine(offscreen, 4, 2, 11, 2, darkGrey);
+  //line 3
+  DrawWeatherLine(offscreen, 3, 3, 12, 3, darkGrey);
+  //line 4
+  DrawWeatherLine(offscreen, 2, 4, 12, 4, darkGrey);
+  //line 5
+  DrawWeatherLine(offscreen, 3, 5, 11, 5, darkGrey);
+  //line 6
+  DrawWeatherLine(offscreen, 4, 6, 4, 6, blue);
+  DrawWeatherLine(offscreen, 7, 6, 7, 6, blue);
+  DrawWeatherLine(offscreen, 10, 6, 10, 6, blue);
+  //line 7
+  DrawWeatherLine(offscreen, 5, 7, 5, 7, blue);
+  DrawWeatherLine(offscreen, 8, 7, 8, 7, blue);
+  DrawWeatherLine(offscreen, 11, 7, 11, 7, blue);
+  //line 8
+  DrawWeatherLine(offscreen, 6, 8, 6, 8, blue);
+  DrawWeatherLine(offscreen, 9, 8, 9, 8, blue);
+  DrawWeatherLine(offscreen, 12, 8, 12, 8, blue);
+}
+
+static void MakeSleetSymbol(FrameCanvas *offscreen) {
+  Color darkGrey(182, 182, 178);
+  Color blue(98, 184, 244);
+  Color white(255, 255, 255);
+  //line 1
+  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey);
+  //line 2 blank
+  DrawWeatherLine(offscreen, 4, 2, 11, 2, darkGrey);
+  //line 3
+  DrawWeatherLine(offscreen, 3, 3, 12, 3, darkGrey);
+  //line 4
+  DrawWeatherLine(offscreen, 2, 4, 12, 4, darkGrey);
+  //line 5
+  DrawWeatherLine(offscreen, 3, 5, 11, 5, darkGrey);
+  //line 6
+  DrawWeatherLine(offscreen, 4, 6, 4, 6, blue);
+  DrawWeatherLine(offscreen, 7, 6, 7, 6, white);
+  DrawWeatherLine(offscreen, 10, 6, 10, 6, blue);
+  //line 7
+  DrawWeatherLine(offscreen, 5, 7, 5, 7, white);
+  DrawWeatherLine(offscreen, 8, 7, 8, 7, blue);
+  DrawWeatherLine(offscreen, 11, 7, 11, 7, white);
+  //line 8
+  DrawWeatherLine(offscreen, 6, 8, 6, 8, blue);
+  DrawWeatherLine(offscreen, 9, 8, 9, 8, white);
+  DrawWeatherLine(offscreen, 12, 8, 12, 8, blue);
+}
+
 static void WriteText(RGBMatrix * canvas) {
   FrameCanvas *offscreen = canvas->CreateFrameCanvas();
   const char *bdf_font_file = "../fonts/4x6.bdf";
@@ -272,7 +354,7 @@ static void WriteText(RGBMatrix * canvas) {
         red, NULL, highTemp.c_str(), 0);
 
       //weather
-      MakeLightSnowSymbol(offscreen);
+      MakeSleetSymbol(offscreen);
 
       clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &next_time, NULL);
 
