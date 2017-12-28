@@ -32,6 +32,48 @@ static void InterruptHandler(int signo) {
   interrupt_received = true;
 }
 
+
+
+static void DrawWeatherLine(FrameCanvas *offscreen, int x0, int y0, int x1, int y1, Color colour) {
+  int xStart = 28;
+  int yStart = 23;
+  DrawLine(offscreen, xStart + x0, yStart + y0, xStart + x1, yStart + y1, colour);
+}
+
+static void MakeCloudySymbol(FrameCanvas *offscreen) {
+  Color white(255, 255, 255);
+  Color lightGrey(232, 232, 230);
+
+  //line 1
+  DrawWeatherLine(offscreen, 5, 1,  7, 1, lightGrey);
+  //line 2
+  DrawWeatherLine(offscreen, 4, 2, 4, 2, lightGrey);
+  DrawWeatherLine(offscreen, 5, 2, 7, 2, white);
+  DrawWeatherLine(offscreen, 8, 2, 8 , 2, lightGrey);
+  //line 3
+  DrawWeatherLine(offscreen, 4, 3, 4, 3, lightGrey);
+  DrawWeatherLine(offscreen, 5, 3, 8, 3, white);
+  DrawWeatherLine(offscreen, 9, 3, 9 , 3, lightGrey);
+  //line 4
+  DrawWeatherLine(offscreen, 2, 4, 3, 4, lightGrey);
+  DrawWeatherLine(offscreen, 4, 4, 9, 4, white);
+  DrawWeatherLine(offscreen, 10, 4, 11 , 4, lightGrey);
+  //line 5
+  DrawWeatherLine(offscreen, 1, 5, 1, 5, lightGrey);
+  DrawWeatherLine(offscreen, 2, 5, 11, 5, white);
+  DrawWeatherLine(offscreen, 12, 5, 12 , 5, lightGrey);
+  //line 6
+  DrawWeatherLine(offscreen, 1, 6, 1, 6, lightGrey);
+  DrawWeatherLine(offscreen, 2, 6, 11, 6, white);
+  DrawWeatherLine(offscreen, 12, 6, 12 , 6, lightGrey);
+  //line 7
+  DrawWeatherLine(offscreen, 2, 7, 4, 7, lightGrey);
+  DrawWeatherLine(offscreen, 5, 7, 9, 7, white);
+  DrawWeatherLine(offscreen, 10, 7, 11 , 7, lightGrey);
+  //line 8
+  DrawWeatherLine(offscreen, 5, 8, 9, 8, lightGrey);
+}
+
 static void WriteText(RGBMatrix * canvas) {
   FrameCanvas *offscreen = canvas->CreateFrameCanvas();
   const char *bdf_font_file = "../fonts/4x6.bdf";
@@ -116,6 +158,9 @@ static void WriteText(RGBMatrix * canvas) {
         coldBlue, NULL, lowTemp.c_str(), 0);
       DrawText(offscreen, bigFont, 15, 32,
         red, NULL, highTemp.c_str(), 0);
+
+      //weather
+      MakeCloudySymbol(offscreen);
 
       clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &next_time, NULL);
 
