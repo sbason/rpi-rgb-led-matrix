@@ -268,6 +268,34 @@ static void MakeSleetSymbol(FrameCanvas *offscreen) {
   DrawWeatherLine(offscreen, 12, 8, 12, 8, blue);
 }
 
+static void MakeThunderSymbol(FrameCanvas *offscreen) {
+  Color darkGrey(182, 182, 178);
+  Color blue(98, 184, 244);
+  Color yellow(255, 240, 0);
+  //line 1
+  DrawWeatherLine(offscreen, 6, 1, 10, 1, darkGrey);
+  //line 2 blank
+  DrawWeatherLine(offscreen, 5, 2, 12, 2, darkGrey);
+  //line 3
+  DrawWeatherLine(offscreen, 4, 3, 13, 3, darkGrey);
+  //line 4
+  DrawWeatherLine(offscreen, 3, 4, 13, 4, darkGrey);
+  //line 5
+  DrawWeatherLine(offscreen, 2, 5, 12, 5, darkGrey);
+  //line 6
+  DrawWeatherLine(offscreen, 4, 6, 4, 6, blue);
+  DrawWeatherLine(offscreen, 7, 6, 8, 6, yellow);
+  DrawWeatherLine(offscreen, 11, 6, 11, 6, blue);
+  //line 7
+  DrawWeatherLine(offscreen, 3, 7, 3, 7, blue);
+  DrawWeatherLine(offscreen, 6, 7, 7, 7, yellow);
+  DrawWeatherLine(offscreen, 10, 7, 10, 7, blue);
+  //line 8
+  DrawWeatherLine(offscreen, 2, 8, 2, 8, blue);
+  DrawWeatherLine(offscreen, 6, 8, 6, 8, yellow);
+  DrawWeatherLine(offscreen, 9, 8, 9, 8, blue);
+}
+
 static void WriteText(RGBMatrix * canvas) {
   FrameCanvas *offscreen = canvas->CreateFrameCanvas();
   const char *bdf_font_file = "../fonts/4x6.bdf";
@@ -354,7 +382,7 @@ static void WriteText(RGBMatrix * canvas) {
         red, NULL, highTemp.c_str(), 0);
 
       //weather
-      MakeSleetSymbol(offscreen);
+      MakeThunderSymbol(offscreen);
 
       clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &next_time, NULL);
 
