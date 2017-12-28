@@ -164,6 +164,28 @@ static void MakeLightRainSymbol(FrameCanvas *offscreen) {
   DrawWeatherLine(offscreen, 9, 8, 9, 8, blue);
 }
 
+static void MakeLightSnowSymbol(FrameCanvas *offscreen) {
+  Color darkGrey(182, 182, 178);
+  Color white(255, 255, 255);
+  //line 1
+  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey);
+  //line 2 blank
+  DrawWeatherLine(offscreen, 4, 2, 10, 2, darkGrey);
+  //line 3
+  DrawWeatherLine(offscreen, 3, 3, 11, 3, darkGrey);
+  //line 4
+  DrawWeatherLine(offscreen, 3, 4, 10, 4, darkGrey);
+  //line 5
+  DrawWeatherLine(offscreen, 4, 5, 9, 5, darkGrey);
+  //line 6
+  DrawWeatherLine(offscreen, 5, 6, 5, 6, white);
+  DrawWeatherLine(offscreen, 8, 6, 8, 6, white);
+  //line 7 blank
+  //line 8
+  DrawWeatherLine(offscreen, 6, 8, 6, 8, white);
+  DrawWeatherLine(offscreen, 9, 8, 9, 8, white);
+}
+
 static void WriteText(RGBMatrix * canvas) {
   FrameCanvas *offscreen = canvas->CreateFrameCanvas();
   const char *bdf_font_file = "../fonts/4x6.bdf";
@@ -250,7 +272,7 @@ static void WriteText(RGBMatrix * canvas) {
         red, NULL, highTemp.c_str(), 0);
 
       //weather
-      MakeLightRainSymbol(offscreen);
+      MakeLightSnowSymbol(offscreen);
 
       clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &next_time, NULL);
 
