@@ -349,8 +349,11 @@ static void WriteText(RGBMatrix * canvas) {
 
       std::ifstream weatherFile("weather.txt");
       std::string lowTemp, highTemp;
+      std::string weatherType;
       std::getline(weatherFile, lowTemp);
       std::getline(weatherFile, highTemp);
+      std::getline(weatherFile, weatherType);
+
 
       offscreen->Fill(0, 0, 0);
 
@@ -390,8 +393,134 @@ static void WriteText(RGBMatrix * canvas) {
 
       //weather
       bool shouldCentre = highTemp.length() < 4;
-
-      MakePartlyCloudySymbol(offscreen, shouldCentre);
+      if (weatherType.empty()) {
+        weatherType = "40";
+      }
+      int weatherCode = stoi(weatherType);
+      switch (weatherCode) {
+        // 0 Clear night
+        case 0:
+          MakeSunnySymbol(offscreen, shouldCentre);
+          break;
+        // 1 Sunny day
+        case 1:
+          MakeSunnySymbol(offscreen, shouldCentre);
+          break;
+        // 2 Partly cloudy (night)
+        case 2:
+          MakePartlyCloudySymbol(offscreen, shouldCentre);
+          break;
+        // 3 Partly cloudy (day)
+        case 3:
+          MakePartlyCloudySymbol(offscreen, shouldCentre);
+          break;
+        // 5 Mist
+        case 5:
+          MakeCloudySymbol(offscreen, shouldCentre);
+          break;
+        // 6 Fog
+        case 6:
+          MakeCloudySymbol(offscreen, shouldCentre);
+          break;
+        // 7 Cloudy
+        case 7:
+          MakeCloudySymbol(offscreen, shouldCentre);
+          break;
+        // 8 Overcast
+        case 8:
+          MakeCloudySymbol(offscreen, shouldCentre);
+          break;
+        // 9 Light rain shower (night)
+        case 9:
+          MakeLightRainSymbol(offscreen, shouldCentre);
+          break;
+        // 10 Light rain shower (day)
+        case 10:
+          MakeLightRainSymbol(offscreen, shouldCentre);
+          break;
+        // 11 Drizzle
+        case 11:
+          MakeLightRainSymbol(offscreen, shouldCentre);
+          break;
+        // 12 Light rain
+        case 12:
+          MakeLightRainSymbol(offscreen, shouldCentre);
+          break;
+        // 13 Heavy rain shower (night)
+        case 13:
+          MakeHeavyRainSymbol(offscreen, shouldCentre);
+          break;
+        // 14 Heavy rain shower (day)
+        case 14:
+          MakeHeavyRainSymbol(offscreen, shouldCentre);
+          break;
+        // 15 Heavy rain
+        case 15:
+          MakeHeavyRainSymbol(offscreen, shouldCentre);
+          break;
+        // 16 Sleet shower (night)
+        case 16:
+          MakeSleetSymbol(offscreen, shouldCentre);
+          break;
+        // 17 Sleet shower (day)
+        case 17:
+          MakeSleetSymbol(offscreen, shouldCentre);
+          break;
+        // 18 Sleet
+        case 18:
+          MakeSleetSymbol(offscreen, shouldCentre);
+          break;
+        // 19 Hail shower (night)
+        case 19:
+          MakeSleetSymbol(offscreen, shouldCentre);
+          break;
+        // 20 Hail shower (day)
+        case 20:
+          MakeSleetSymbol(offscreen, shouldCentre);
+          break;
+        // 21 Hail
+        case 21:
+          MakeSleetSymbol(offscreen, shouldCentre);
+          break;
+        // 22 Light snow shower (night)
+        case 22:
+          MakeLightSnowSymbol(offscreen, shouldCentre);
+          break;
+        // 23 Light snow shower (day)
+        case 23:
+          MakeLightSnowSymbol(offscreen, shouldCentre);
+          break;
+        // 24 Light snow
+        case 24:
+          MakeLightSnowSymbol(offscreen, shouldCentre);
+          break;
+        // 25 Heavy snow shower (night)
+        case 25:
+          MakeHeavySnowSymbol(offscreen, shouldCentre);
+          break;
+        // 26 Heavy snow shower (day)
+        case 26:
+          MakeHeavySnowSymbol(offscreen, shouldCentre);
+          break;
+        // 27 Heavy snow
+        case 27:
+          MakeHeavySnowSymbol(offscreen, shouldCentre);
+          break;
+        // 28 Thunder shower (night)
+        case 28:
+          MakeThunderSymbol(offscreen, shouldCentre);
+          break;
+        // 29 Thunder shower (day)
+        case 29:
+          MakeThunderSymbol(offscreen, shouldCentre);
+          break;
+        // 30 Thunder
+        case 30:
+          MakeThunderSymbol(offscreen, shouldCentre);
+          break;
+        case 40:
+          break;
+      }
 
       clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &next_time, NULL);
 
@@ -401,6 +530,7 @@ static void WriteText(RGBMatrix * canvas) {
 
     } catch(const std::exception& e) {
       printf("An error occured");
+      std::cerr << e.what();
     }
     next_time.tv_sec = time(NULL) + 1;
   }
