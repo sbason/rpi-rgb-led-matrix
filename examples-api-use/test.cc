@@ -15,7 +15,9 @@
 #include <stdlib.h>
 #include <fstream>
 #include <string>
+#include <iostream>
 
+using namespace std;
 using rgb_matrix::GPIO;
 using rgb_matrix::RGBMatrix;
 using rgb_matrix::Canvas;
@@ -33,267 +35,272 @@ static void InterruptHandler(int signo) {
 }
 
 
+static void DrawWeatherLine(FrameCanvas *offscreen, int x0, int y0, int x1, int y1, Color colour, bool centre) {
+  int xStart;
+  if (centre) {
+    xStart = 25;
+  } else {
+    xStart = 28;
+  }
 
-static void DrawWeatherLine(FrameCanvas *offscreen, int x0, int y0, int x1, int y1, Color colour) {
-  int xStart = 28;
   int yStart = 23;
   DrawLine(offscreen, xStart + x0, yStart + y0, xStart + x1, yStart + y1, colour);
 }
 
-static void MakeCloudySymbol(FrameCanvas *offscreen) {
+static void MakeCloudySymbol(FrameCanvas *offscreen, bool centre) {
   Color white(255, 255, 255);
   Color lightGrey(232, 232, 230);
 
   //line 1
-  DrawWeatherLine(offscreen, 5, 1,  7, 1, lightGrey);
+  DrawWeatherLine(offscreen, 5, 1,  7, 1, lightGrey, centre);
   //line 2
-  DrawWeatherLine(offscreen, 4, 2, 4, 2, lightGrey);
-  DrawWeatherLine(offscreen, 5, 2, 7, 2, white);
-  DrawWeatherLine(offscreen, 8, 2, 8 , 2, lightGrey);
+  DrawWeatherLine(offscreen, 4, 2, 4, 2, lightGrey, centre);
+  DrawWeatherLine(offscreen, 5, 2, 7, 2, white, centre);
+  DrawWeatherLine(offscreen, 8, 2, 8 , 2, lightGrey, centre);
   //line 3
-  DrawWeatherLine(offscreen, 4, 3, 4, 3, lightGrey);
-  DrawWeatherLine(offscreen, 5, 3, 8, 3, white);
-  DrawWeatherLine(offscreen, 9, 3, 9 , 3, lightGrey);
+  DrawWeatherLine(offscreen, 4, 3, 4, 3, lightGrey, centre);
+  DrawWeatherLine(offscreen, 5, 3, 8, 3, white, centre);
+  DrawWeatherLine(offscreen, 9, 3, 9 , 3, lightGrey, centre);
   //line 4
-  DrawWeatherLine(offscreen, 2, 4, 3, 4, lightGrey);
-  DrawWeatherLine(offscreen, 4, 4, 9, 4, white);
-  DrawWeatherLine(offscreen, 10, 4, 11 , 4, lightGrey);
+  DrawWeatherLine(offscreen, 2, 4, 3, 4, lightGrey, centre);
+  DrawWeatherLine(offscreen, 4, 4, 9, 4, white, centre);
+  DrawWeatherLine(offscreen, 10, 4, 11 , 4, lightGrey, centre);
   //line 5
-  DrawWeatherLine(offscreen, 1, 5, 1, 5, lightGrey);
-  DrawWeatherLine(offscreen, 2, 5, 11, 5, white);
-  DrawWeatherLine(offscreen, 12, 5, 12 , 5, lightGrey);
+  DrawWeatherLine(offscreen, 1, 5, 1, 5, lightGrey, centre);
+  DrawWeatherLine(offscreen, 2, 5, 11, 5, white, centre);
+  DrawWeatherLine(offscreen, 12, 5, 12 , 5, lightGrey, centre);
   //line 6
-  DrawWeatherLine(offscreen, 1, 6, 1, 6, lightGrey);
-  DrawWeatherLine(offscreen, 2, 6, 11, 6, white);
-  DrawWeatherLine(offscreen, 12, 6, 12 , 6, lightGrey);
+  DrawWeatherLine(offscreen, 1, 6, 1, 6, lightGrey, centre);
+  DrawWeatherLine(offscreen, 2, 6, 11, 6, white, centre);
+  DrawWeatherLine(offscreen, 12, 6, 12 , 6, lightGrey, centre);
   //line 7
-  DrawWeatherLine(offscreen, 2, 7, 4, 7, lightGrey);
-  DrawWeatherLine(offscreen, 5, 7, 9, 7, white);
-  DrawWeatherLine(offscreen, 10, 7, 11 , 7, lightGrey);
+  DrawWeatherLine(offscreen, 2, 7, 4, 7, lightGrey, centre);
+  DrawWeatherLine(offscreen, 5, 7, 9, 7, white, centre);
+  DrawWeatherLine(offscreen, 10, 7, 11 , 7, lightGrey, centre);
   //line 8
-  DrawWeatherLine(offscreen, 5, 8, 9, 8, lightGrey);
+  DrawWeatherLine(offscreen, 5, 8, 9, 8, lightGrey, centre);
 }
 
-static void MakeSunnySymbol(FrameCanvas *offscreen) {
+static void MakeSunnySymbol(FrameCanvas *offscreen, bool centre) {
   Color orange(240, 198, 0);
 
   //line 1
-  DrawWeatherLine(offscreen, 5, 1, 5, 1, orange);
-  DrawWeatherLine(offscreen, 8, 1, 8, 1, orange);
+  DrawWeatherLine(offscreen, 5, 1, 5, 1, orange, centre);
+  DrawWeatherLine(offscreen, 8, 1, 8, 1, orange, centre);
   //line 2 blank
   //line 3
-  DrawWeatherLine(offscreen, 3, 3, 3, 3, orange);
-  DrawWeatherLine(offscreen, 5, 3, 8, 3, orange);
-  DrawWeatherLine(offscreen, 10, 3, 10, 3, orange);
+  DrawWeatherLine(offscreen, 3, 3, 3, 3, orange, centre);
+  DrawWeatherLine(offscreen, 5, 3, 8, 3, orange, centre);
+  DrawWeatherLine(offscreen, 10, 3, 10, 3, orange, centre);
   //line 4
-  DrawWeatherLine(offscreen, 5, 4, 8, 4, orange);
+  DrawWeatherLine(offscreen, 5, 4, 8, 4, orange, centre);
 
   //line 5
-  DrawWeatherLine(offscreen, 5, 5, 8, 5, orange);
+  DrawWeatherLine(offscreen, 5, 5, 8, 5, orange, centre);
   //line 6
-  DrawWeatherLine(offscreen, 3, 6, 3, 6, orange);
-  DrawWeatherLine(offscreen, 5, 6, 8, 6, orange);
-  DrawWeatherLine(offscreen, 10, 6, 10, 6, orange);
+  DrawWeatherLine(offscreen, 3, 6, 3, 6, orange, centre);
+  DrawWeatherLine(offscreen, 5, 6, 8, 6, orange, centre);
+  DrawWeatherLine(offscreen, 10, 6, 10, 6, orange, centre);
   //line 7 blank
   //line 8
-  DrawWeatherLine(offscreen, 5, 8, 5, 8, orange);
-  DrawWeatherLine(offscreen, 8, 8, 8, 8, orange);
+  DrawWeatherLine(offscreen, 5, 8, 5, 8, orange, centre);
+  DrawWeatherLine(offscreen, 8, 8, 8, 8, orange, centre);
 }
 
-static void MakePartlyCloudySymbol(FrameCanvas *offscreen) {
+static void MakePartlyCloudySymbol(FrameCanvas *offscreen, bool centre) {
   Color orange(240, 198, 0);
+  Color white(200, 200, 200);
+  Color lightGrey(150, 150, 150);
+  //line 1
+  DrawWeatherLine(offscreen, 5, 1, 5, 1, orange, centre);
+  DrawWeatherLine(offscreen, 8, 1, 8, 1, orange, centre);
+  //line 2 blank
+  //line 3
+  DrawWeatherLine(offscreen, 3, 3, 3, 3, orange, centre);
+  DrawWeatherLine(offscreen, 5, 3, 8, 3, orange, centre);
+  DrawWeatherLine(offscreen, 10, 3, 10, 3, orange, centre);
+  //line 4
+  DrawWeatherLine(offscreen, 5, 4, 7, 4, orange, centre);
+  DrawWeatherLine(offscreen, 8, 4, 9, 4, lightGrey, centre);
+  //line 5
+  DrawWeatherLine(offscreen, 4, 5, 5, 5, lightGrey, centre);
+  DrawWeatherLine(offscreen, 6, 5, 6, 5, orange, centre);
+  DrawWeatherLine(offscreen, 7, 5, 7, 5, lightGrey, centre);
+  DrawWeatherLine(offscreen, 8, 5, 9, 5, white, centre);
+  DrawWeatherLine(offscreen, 10, 5, 10, 5, lightGrey, centre);
+  //line 6
+  DrawWeatherLine(offscreen, 3, 6, 3, 6, lightGrey, centre);
+  DrawWeatherLine(offscreen, 4, 6, 5, 6, white, centre);
+  DrawWeatherLine(offscreen, 6, 6, 6, 6, orange, centre);
+  DrawWeatherLine(offscreen, 7, 6, 9, 6, white, centre);
+  DrawWeatherLine(offscreen, 10, 6, 10, 6, lightGrey, centre);
+  //line 7
+  DrawWeatherLine(offscreen, 3, 7, 3, 7, lightGrey, centre);
+  DrawWeatherLine(offscreen, 4, 7, 9, 7, white, centre);
+  DrawWeatherLine(offscreen, 10, 7, 10, 7, lightGrey, centre);
+  //line 8
+  DrawWeatherLine(offscreen, 4, 8, 9, 8, lightGrey, centre);
+}
+
+static void MakeLightRainSymbol(FrameCanvas *offscreen, bool centre) {
+  Color blue(0, 0, 255);
   Color white(255, 255, 255);
   Color lightGrey(232, 232, 230);
   //line 1
-  DrawWeatherLine(offscreen, 5, 1, 5, 1, orange);
-  DrawWeatherLine(offscreen, 8, 1, 8, 1, orange);
+  DrawWeatherLine(offscreen, 5, 1, 9, 1, lightGrey, centre);
   //line 2 blank
+  DrawWeatherLine(offscreen, 4, 2, 4, 2, lightGrey, centre);
+  DrawWeatherLine(offscreen, 5, 2, 9, 2, white, centre);
+  DrawWeatherLine(offscreen, 10, 2, 10, 2, lightGrey, centre);
   //line 3
-  DrawWeatherLine(offscreen, 3, 3, 3, 3, orange);
-  DrawWeatherLine(offscreen, 5, 3, 8, 3, orange);
-  DrawWeatherLine(offscreen, 10, 3, 10, 3, orange);
+  DrawWeatherLine(offscreen, 3, 3, 3, 3, lightGrey, centre);
+  DrawWeatherLine(offscreen, 4, 3, 10, 3, white, centre);
+  DrawWeatherLine(offscreen, 11, 3, 11, 3, lightGrey, centre);
   //line 4
-  DrawWeatherLine(offscreen, 5, 4, 7, 4, orange);
-  DrawWeatherLine(offscreen, 8, 4, 9, 4, lightGrey);
+  DrawWeatherLine(offscreen, 3, 4, 3, 4, lightGrey, centre);
+  DrawWeatherLine(offscreen, 4, 4, 9, 4, white, centre);
+  DrawWeatherLine(offscreen, 10, 4, 10, 4, lightGrey, centre);
   //line 5
-  DrawWeatherLine(offscreen, 4, 5, 5, 5, lightGrey);
-  DrawWeatherLine(offscreen, 6, 5, 6, 5, orange);
-  DrawWeatherLine(offscreen, 7, 5, 7, 5, lightGrey);
-  DrawWeatherLine(offscreen, 8, 5, 9, 5, white);
-  DrawWeatherLine(offscreen, 10, 5, 10, 5, lightGrey);
+  DrawWeatherLine(offscreen, 4, 5, 9, 5, lightGrey, centre);
   //line 6
-  DrawWeatherLine(offscreen, 3, 6, 3, 6, lightGrey);
-  DrawWeatherLine(offscreen, 4, 6, 5, 6, white);
-  DrawWeatherLine(offscreen, 6, 6, 6, 6, orange);
-  DrawWeatherLine(offscreen, 7, 6, 9, 6, white);
-  DrawWeatherLine(offscreen, 10, 6, 10, 6, lightGrey);
-  //line 7
-  DrawWeatherLine(offscreen, 3, 7, 3, 7, lightGrey);
-  DrawWeatherLine(offscreen, 4, 7, 9, 7, white);
-  DrawWeatherLine(offscreen, 10, 7, 10, 7, lightGrey);
-  //line 8
-  DrawWeatherLine(offscreen, 4, 8, 9, 8, lightGrey);
-}
-
-static void MakeLightRainSymbol(FrameCanvas *offscreen) {
-  Color blue(98, 184, 244);
-  Color white(255, 255, 255);
-  Color lightGrey(232, 232, 230);
-  //line 1
-  DrawWeatherLine(offscreen, 5, 1, 9, 1, lightGrey);
-  //line 2 blank
-  DrawWeatherLine(offscreen, 4, 2, 4, 2, lightGrey);
-  DrawWeatherLine(offscreen, 5, 2, 9, 2, white);
-  DrawWeatherLine(offscreen, 10, 2, 10, 2, lightGrey);
-  //line 3
-  DrawWeatherLine(offscreen, 3, 3, 3, 3, lightGrey);
-  DrawWeatherLine(offscreen, 4, 3, 10, 3, white);
-  DrawWeatherLine(offscreen, 11, 3, 11, 3, lightGrey);
-  //line 4
-  DrawWeatherLine(offscreen, 3, 4, 3, 4, lightGrey);
-  DrawWeatherLine(offscreen, 4, 4, 9, 4, white);
-  DrawWeatherLine(offscreen, 10, 4, 10, 4, lightGrey);
-  //line 5
-  DrawWeatherLine(offscreen, 4, 5, 9, 5, lightGrey);
-  //line 6
-  DrawWeatherLine(offscreen, 5, 6, 5, 6, blue);
-  DrawWeatherLine(offscreen, 8, 6, 8, 6, blue);
+  DrawWeatherLine(offscreen, 5, 6, 5, 6, blue, centre);
+  DrawWeatherLine(offscreen, 8, 6, 8, 6, blue, centre);
   //line 7 blank
   //line 8
-  DrawWeatherLine(offscreen, 6, 8, 6, 8, blue);
-  DrawWeatherLine(offscreen, 9, 8, 9, 8, blue);
+  DrawWeatherLine(offscreen, 6, 8, 6, 8, blue, centre);
+  DrawWeatherLine(offscreen, 9, 8, 9, 8, blue, centre);
 }
 
-static void MakeLightSnowSymbol(FrameCanvas *offscreen) {
-  Color darkGrey(182, 182, 178);
+static void MakeLightSnowSymbol(FrameCanvas *offscreen, bool centre) {
+  Color darkGrey(90, 90, 90);
   Color white(255, 255, 255);
   //line 1
-  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey);
+  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey, centre);
   //line 2 blank
-  DrawWeatherLine(offscreen, 4, 2, 10, 2, darkGrey);
+  DrawWeatherLine(offscreen, 4, 2, 10, 2, darkGrey, centre);
   //line 3
-  DrawWeatherLine(offscreen, 3, 3, 11, 3, darkGrey);
+  DrawWeatherLine(offscreen, 3, 3, 11, 3, darkGrey, centre);
   //line 4
-  DrawWeatherLine(offscreen, 3, 4, 10, 4, darkGrey);
+  DrawWeatherLine(offscreen, 3, 4, 10, 4, darkGrey, centre);
   //line 5
-  DrawWeatherLine(offscreen, 4, 5, 9, 5, darkGrey);
+  DrawWeatherLine(offscreen, 4, 5, 9, 5, darkGrey, centre);
   //line 6
-  DrawWeatherLine(offscreen, 5, 6, 5, 6, white);
-  DrawWeatherLine(offscreen, 8, 6, 8, 6, white);
+  DrawWeatherLine(offscreen, 5, 6, 5, 6, white, centre);
+  DrawWeatherLine(offscreen, 8, 6, 8, 6, white, centre);
   //line 7 blank
   //line 8
-  DrawWeatherLine(offscreen, 6, 8, 6, 8, white);
-  DrawWeatherLine(offscreen, 9, 8, 9, 8, white);
+  DrawWeatherLine(offscreen, 6, 8, 6, 8, white, centre);
+  DrawWeatherLine(offscreen, 9, 8, 9, 8, white, centre);
 }
 
-static void MakeHeavySnowSymbol(FrameCanvas *offscreen) {
-  Color darkGrey(182, 182, 178);
+static void MakeHeavySnowSymbol(FrameCanvas *offscreen, bool centre) {
+  Color darkGrey(90, 90, 90);
   Color white(255, 255, 255);
   //line 1
-  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey);
+  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey, centre);
   //line 2 blank
-  DrawWeatherLine(offscreen, 4, 2, 11, 2, darkGrey);
+  DrawWeatherLine(offscreen, 4, 2, 11, 2, darkGrey, centre);
   //line 3
-  DrawWeatherLine(offscreen, 3, 3, 12, 3, darkGrey);
+  DrawWeatherLine(offscreen, 3, 3, 12, 3, darkGrey, centre);
   //line 4
-  DrawWeatherLine(offscreen, 2, 4, 12, 4, darkGrey);
+  DrawWeatherLine(offscreen, 2, 4, 12, 4, darkGrey, centre);
   //line 5
-  DrawWeatherLine(offscreen, 3, 5, 11, 5, darkGrey);
+  DrawWeatherLine(offscreen, 3, 5, 11, 5, darkGrey, centre);
   //line 6
-  DrawWeatherLine(offscreen, 4, 6, 4, 6, white);
-  DrawWeatherLine(offscreen, 7, 6, 7, 6, white);
-  DrawWeatherLine(offscreen, 10, 6, 10, 6, white);
+  DrawWeatherLine(offscreen, 4, 6, 4, 6, white, centre);
+  DrawWeatherLine(offscreen, 7, 6, 7, 6, white, centre);
+  DrawWeatherLine(offscreen, 10, 6, 10, 6, white, centre);
   //line 7
-  DrawWeatherLine(offscreen, 5, 7, 5, 7, white);
-  DrawWeatherLine(offscreen, 8, 7, 8, 7, white);
-  DrawWeatherLine(offscreen, 11, 7, 11, 7, white);
+  DrawWeatherLine(offscreen, 5, 7, 5, 7, white, centre);
+  DrawWeatherLine(offscreen, 8, 7, 8, 7, white, centre);
+  DrawWeatherLine(offscreen, 11, 7, 11, 7, white, centre);
   //line 8
-  DrawWeatherLine(offscreen, 6, 8, 6, 8, white);
-  DrawWeatherLine(offscreen, 9, 8, 9, 8, white);
-  DrawWeatherLine(offscreen, 12, 8, 12, 8, white);
+  DrawWeatherLine(offscreen, 6, 8, 6, 8, white, centre);
+  DrawWeatherLine(offscreen, 9, 8, 9, 8, white, centre);
+  DrawWeatherLine(offscreen, 12, 8, 12, 8, white, centre);
 }
 
-static void MakeHeavyRainSymbol(FrameCanvas *offscreen) {
-  Color darkGrey(182, 182, 178);
-  Color blue(98, 184, 244);
+static void MakeHeavyRainSymbol(FrameCanvas *offscreen, bool centre) {
+  Color darkGrey(90, 90, 90);
+  Color blue(0, 0, 255);
   //line 1
-  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey);
+  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey, centre);
   //line 2 blank
-  DrawWeatherLine(offscreen, 4, 2, 11, 2, darkGrey);
+  DrawWeatherLine(offscreen, 4, 2, 11, 2, darkGrey, centre);
   //line 3
-  DrawWeatherLine(offscreen, 3, 3, 12, 3, darkGrey);
+  DrawWeatherLine(offscreen, 3, 3, 12, 3, darkGrey, centre);
   //line 4
-  DrawWeatherLine(offscreen, 2, 4, 12, 4, darkGrey);
+  DrawWeatherLine(offscreen, 2, 4, 12, 4, darkGrey, centre);
   //line 5
-  DrawWeatherLine(offscreen, 3, 5, 11, 5, darkGrey);
+  DrawWeatherLine(offscreen, 3, 5, 11, 5, darkGrey, centre);
   //line 6
-  DrawWeatherLine(offscreen, 4, 6, 4, 6, blue);
-  DrawWeatherLine(offscreen, 7, 6, 7, 6, blue);
-  DrawWeatherLine(offscreen, 10, 6, 10, 6, blue);
+  DrawWeatherLine(offscreen, 4, 6, 4, 6, blue, centre);
+  DrawWeatherLine(offscreen, 7, 6, 7, 6, blue, centre);
+  DrawWeatherLine(offscreen, 10, 6, 10, 6, blue, centre);
   //line 7
-  DrawWeatherLine(offscreen, 5, 7, 5, 7, blue);
-  DrawWeatherLine(offscreen, 8, 7, 8, 7, blue);
-  DrawWeatherLine(offscreen, 11, 7, 11, 7, blue);
+  DrawWeatherLine(offscreen, 5, 7, 5, 7, blue, centre);
+  DrawWeatherLine(offscreen, 8, 7, 8, 7, blue, centre);
+  DrawWeatherLine(offscreen, 11, 7, 11, 7, blue, centre);
   //line 8
-  DrawWeatherLine(offscreen, 6, 8, 6, 8, blue);
-  DrawWeatherLine(offscreen, 9, 8, 9, 8, blue);
-  DrawWeatherLine(offscreen, 12, 8, 12, 8, blue);
+  DrawWeatherLine(offscreen, 6, 8, 6, 8, blue, centre);
+  DrawWeatherLine(offscreen, 9, 8, 9, 8, blue, centre);
+  DrawWeatherLine(offscreen, 12, 8, 12, 8, blue, centre);
 }
 
-static void MakeSleetSymbol(FrameCanvas *offscreen) {
-  Color darkGrey(182, 182, 178);
-  Color blue(98, 184, 244);
+static void MakeSleetSymbol(FrameCanvas *offscreen, bool centre) {
+  Color darkGrey(90, 90, 90);
+  Color blue(0, 0, 255);
   Color white(255, 255, 255);
   //line 1
-  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey);
+  DrawWeatherLine(offscreen, 5, 1, 9, 1, darkGrey, centre);
   //line 2 blank
-  DrawWeatherLine(offscreen, 4, 2, 11, 2, darkGrey);
+  DrawWeatherLine(offscreen, 4, 2, 11, 2, darkGrey, centre);
   //line 3
-  DrawWeatherLine(offscreen, 3, 3, 12, 3, darkGrey);
+  DrawWeatherLine(offscreen, 3, 3, 12, 3, darkGrey, centre);
   //line 4
-  DrawWeatherLine(offscreen, 2, 4, 12, 4, darkGrey);
+  DrawWeatherLine(offscreen, 2, 4, 12, 4, darkGrey, centre);
   //line 5
-  DrawWeatherLine(offscreen, 3, 5, 11, 5, darkGrey);
+  DrawWeatherLine(offscreen, 3, 5, 11, 5, darkGrey, centre);
   //line 6
-  DrawWeatherLine(offscreen, 4, 6, 4, 6, blue);
-  DrawWeatherLine(offscreen, 7, 6, 7, 6, white);
-  DrawWeatherLine(offscreen, 10, 6, 10, 6, blue);
+  DrawWeatherLine(offscreen, 4, 6, 4, 6, blue, centre);
+  DrawWeatherLine(offscreen, 7, 6, 7, 6, white, centre);
+  DrawWeatherLine(offscreen, 10, 6, 10, 6, blue, centre);
   //line 7
-  DrawWeatherLine(offscreen, 5, 7, 5, 7, white);
-  DrawWeatherLine(offscreen, 8, 7, 8, 7, blue);
-  DrawWeatherLine(offscreen, 11, 7, 11, 7, white);
+  DrawWeatherLine(offscreen, 5, 7, 5, 7, white, centre);
+  DrawWeatherLine(offscreen, 8, 7, 8, 7, blue, centre);
+  DrawWeatherLine(offscreen, 11, 7, 11, 7, white, centre);
   //line 8
-  DrawWeatherLine(offscreen, 6, 8, 6, 8, blue);
-  DrawWeatherLine(offscreen, 9, 8, 9, 8, white);
-  DrawWeatherLine(offscreen, 12, 8, 12, 8, blue);
+  DrawWeatherLine(offscreen, 6, 8, 6, 8, blue, centre);
+  DrawWeatherLine(offscreen, 9, 8, 9, 8, white, centre);
+  DrawWeatherLine(offscreen, 12, 8, 12, 8, blue, centre);
 }
 
-static void MakeThunderSymbol(FrameCanvas *offscreen) {
-  Color darkGrey(182, 182, 178);
-  Color blue(98, 184, 244);
+static void MakeThunderSymbol(FrameCanvas *offscreen, bool centre) {
+  Color darkGrey(90, 90, 90);
+  Color blue(0, 0, 255);
   Color yellow(255, 240, 0);
   //line 1
-  DrawWeatherLine(offscreen, 6, 1, 10, 1, darkGrey);
+  DrawWeatherLine(offscreen, 6, 1, 10, 1, darkGrey, centre);
   //line 2 blank
-  DrawWeatherLine(offscreen, 5, 2, 12, 2, darkGrey);
+  DrawWeatherLine(offscreen, 5, 2, 12, 2, darkGrey, centre);
   //line 3
-  DrawWeatherLine(offscreen, 4, 3, 13, 3, darkGrey);
+  DrawWeatherLine(offscreen, 4, 3, 13, 3, darkGrey, centre);
   //line 4
-  DrawWeatherLine(offscreen, 3, 4, 13, 4, darkGrey);
+  DrawWeatherLine(offscreen, 3, 4, 13, 4, darkGrey, centre);
   //line 5
-  DrawWeatherLine(offscreen, 2, 5, 12, 5, darkGrey);
+  DrawWeatherLine(offscreen, 2, 5, 12, 5, darkGrey, centre);
   //line 6
-  DrawWeatherLine(offscreen, 4, 6, 4, 6, blue);
-  DrawWeatherLine(offscreen, 7, 6, 8, 6, yellow);
-  DrawWeatherLine(offscreen, 11, 6, 11, 6, blue);
+  DrawWeatherLine(offscreen, 4, 6, 4, 6, blue, centre);
+  DrawWeatherLine(offscreen, 7, 6, 8, 6, yellow, centre);
+  DrawWeatherLine(offscreen, 11, 6, 11, 6, blue, centre);
   //line 7
-  DrawWeatherLine(offscreen, 3, 7, 3, 7, blue);
-  DrawWeatherLine(offscreen, 6, 7, 7, 7, yellow);
-  DrawWeatherLine(offscreen, 10, 7, 10, 7, blue);
+  DrawWeatherLine(offscreen, 3, 7, 3, 7, blue, centre);
+  DrawWeatherLine(offscreen, 6, 7, 7, 7, yellow, centre);
+  DrawWeatherLine(offscreen, 10, 7, 10, 7, blue, centre);
   //line 8
-  DrawWeatherLine(offscreen, 2, 8, 2, 8, blue);
-  DrawWeatherLine(offscreen, 6, 8, 6, 8, yellow);
-  DrawWeatherLine(offscreen, 9, 8, 9, 8, blue);
+  DrawWeatherLine(offscreen, 2, 8, 2, 8, blue, centre);
+  DrawWeatherLine(offscreen, 6, 8, 6, 8, yellow, centre);
+  DrawWeatherLine(offscreen, 9, 8, 9, 8, blue, centre);
 }
 
 static void WriteText(RGBMatrix * canvas) {
@@ -348,7 +355,7 @@ static void WriteText(RGBMatrix * canvas) {
       offscreen->Fill(0, 0, 0);
 
       Color red(255, 0, 0);
-      Color yellow(252, 192, 50);
+      Color yellow(255, 100, 0);
       Color green(0, 255, 0);
       Color white(255, 255, 255);
       Color coldBlue(0, 228, 255);
@@ -382,7 +389,9 @@ static void WriteText(RGBMatrix * canvas) {
         red, NULL, highTemp.c_str(), 0);
 
       //weather
-      MakeThunderSymbol(offscreen);
+      bool shouldCentre = highTemp.length() < 4;
+
+      MakePartlyCloudySymbol(offscreen, shouldCentre);
 
       clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &next_time, NULL);
 
